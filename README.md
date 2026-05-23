@@ -1,22 +1,34 @@
-# CareerLog
+# 💼 CareerLog
 
-CareerLog is a job application tracking web application built with Laravel and PostgreSQL. It helps users organize companies, job applications, recruitment statuses, and interview schedules in one clean dashboard.
+**CareerLog** is a job application tracking web application built with **Laravel** and **PostgreSQL**.  
+It helps users organize companies, job applications, recruitment statuses, interview schedules, and personal notes in one clean and responsive dashboard.
 
-This project was developed as a portfolio project to demonstrate full-stack web development skills using Laravel, Blade, Tailwind CSS, authentication, database relationships, CRUD operations, and responsive UI design.
-
----
-
-## Overview
-
-Searching for a job often involves tracking many companies, roles, statuses, interviews, and follow-up notes. CareerLog provides a centralized workspace where users can manage their job search process more clearly and efficiently.
-
-The application includes authentication, a dashboard summary, company management, job application tracking, application status monitoring, and responsive layouts for desktop, tablet, and mobile devices.
+This project was developed as a **portfolio project** to demonstrate full-stack web development skills using Laravel, Blade, Tailwind CSS, authentication, database relationships, CRUD operations, responsive UI design, and interactive components with Alpine.js.
 
 ---
 
-## Features
+## ✨ Overview
 
-### Authentication
+Searching for a job can become messy when applications are spread across emails, spreadsheets, notes, job portals, and chat messages.
+
+CareerLog solves that problem by providing a centralized workspace where users can track:
+
+- Companies they applied to
+- Job positions
+- Application statuses
+- Interview schedules
+- Salary expectations
+- Work models
+- Personal notes
+- Application progress
+
+The goal of this project is to make job hunting more structured, visual, and easier to manage.
+
+---
+
+## 🚀 Key Features
+
+### 🔐 Authentication
 
 - Login using Laravel Breeze authentication
 - Logout functionality
@@ -24,7 +36,9 @@ The application includes authentication, a dashboard summary, company management
 - Register page disabled for the current version
 - Default user account created through database seeder
 
-### Dashboard
+---
+
+### 📊 Dashboard
 
 The dashboard provides a quick overview of the user's job search progress.
 
@@ -39,7 +53,9 @@ Dashboard features:
 - Upcoming interviews section
 - Responsive dashboard layout
 
-### Companies Management
+---
+
+### 🏢 Companies Management
 
 The Companies module is used to manage company data related to job applications.
 
@@ -53,7 +69,9 @@ Company features:
 - Search company
 - Modal-based create, edit, and detail views without leaving the main page
 
-### Applications Management
+---
+
+### 📝 Applications Management
 
 The Applications module is used to track job applications submitted by the user.
 
@@ -70,7 +88,9 @@ Application features:
 - Dropdown action menu
 - Modal-based create, edit, and detail views without page redirection
 
-### Responsive UI
+---
+
+### 📱 Responsive UI
 
 CareerLog is designed to work across multiple screen sizes.
 
@@ -85,42 +105,45 @@ Responsive behavior:
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 | Technology | Purpose |
 |---|---|
-| Laravel | Backend framework |
-| PostgreSQL | Relational database |
-| Blade | Server-side templating |
-| Tailwind CSS | Styling and responsive UI |
-| Laravel Breeze | Authentication scaffolding |
-| Alpine.js | Modal, dropdown, and sidebar interactions |
-| Heroicons | UI icons |
-| Vite | Frontend asset bundling |
+| **Laravel** | Backend framework |
+| **PostgreSQL** | Relational database |
+| **Blade** | Server-side templating |
+| **Tailwind CSS** | Styling and responsive UI |
+| **Laravel Breeze** | Authentication scaffolding |
+| **Alpine.js** | Modal, dropdown, and sidebar interactions |
+| **Heroicons** | UI icons |
+| **Vite** | Frontend asset bundling |
 
 ---
 
-## Main Modules
+## 🧩 Main Modules
 
-### 1. Authentication
+### 1. 🔐 Authentication
 
-CareerLog uses Laravel Breeze for authentication. The application currently supports login and logout only. Registration is disabled because the app is designed for a seeded user account in this version.
+CareerLog uses Laravel Breeze for authentication.  
+The application currently supports login and logout only. Registration is disabled because the app is designed for a seeded user account in this version.
 
-### 2. Dashboard
+### 2. 📊 Dashboard
 
-The dashboard displays job search metrics and visual summaries. It helps users quickly understand their application pipeline and upcoming interview activities.
+The dashboard displays job search metrics and visual summaries.  
+It helps users quickly understand their application pipeline and upcoming interview activities.
 
-### 3. Companies
+### 3. 🏢 Companies
 
-The Companies module stores company information such as company name, website, email, address, and notes. Each company belongs to a specific user.
+The Companies module stores company information such as company name, website, email, address, and notes.  
+Each company belongs to a specific user.
 
-### 4. Applications
+### 4. 📝 Applications
 
 The Applications module stores job application records, including company, position, applied date, status, source, salary, work model, next interview date, and notes.
 
 ---
 
-## Database Design
+## 🗄️ Database Design
 
 CareerLog uses three main database tables:
 
@@ -130,7 +153,7 @@ companies
 job_applications
 ````
 
-### Relationships
+### 🔗 Relationships
 
 ```text
 User
@@ -147,9 +170,9 @@ JobApplication
 
 ---
 
-## Database Tables
+## 📋 Database Tables
 
-### Users Table
+### 👤 Users Table
 
 The `users` table is provided by Laravel Breeze authentication.
 
@@ -164,7 +187,9 @@ created_at
 updated_at
 ```
 
-### Companies Table
+---
+
+### 🏢 Companies Table
 
 The `companies` table stores company data.
 
@@ -182,7 +207,9 @@ created_at
 updated_at
 ```
 
-### Job Applications Table
+---
+
+### 📝 Job Applications Table
 
 The `job_applications` table stores application tracking data.
 
@@ -206,7 +233,7 @@ updated_at
 
 ---
 
-## Folder Structure
+## 📁 Folder Structure
 
 Important project structure:
 
@@ -263,7 +290,7 @@ app/Models/
 
 ---
 
-## Installation
+## ⚙️ Installation
 
 Follow these steps to run the project locally.
 
@@ -302,7 +329,7 @@ php artisan key:generate
 
 ---
 
-## Environment Configuration
+## 🧬 Environment Configuration
 
 Update the database configuration in `.env`.
 
@@ -321,7 +348,7 @@ Make sure the `careerlog` database already exists in PostgreSQL.
 
 ---
 
-## Run Migration
+## 🧱 Run Migration
 
 ```bash
 php artisan migrate
@@ -329,7 +356,7 @@ php artisan migrate
 
 ---
 
-## Create Default User
+## 👤 Create Default User
 
 Because registration is disabled in this version, the default user account is created using a database seeder.
 
@@ -348,7 +375,7 @@ Password : password123
 
 ---
 
-## Run the Application
+## ▶️ Run the Application
 
 Start the Laravel development server:
 
@@ -370,7 +397,7 @@ http://127.0.0.1:8000
 
 ---
 
-## Main Routes
+## 🧭 Main Routes
 
 | Method    | URL                           | Route Name           | Description        |
 | --------- | ----------------------------- | -------------------- | ------------------ |
@@ -390,7 +417,7 @@ http://127.0.0.1:8000
 
 ---
 
-## Route Example
+## 🛣️ Route Example
 
 ```php
 use App\Http\Controllers\CompanyController;
@@ -416,9 +443,9 @@ require __DIR__.'/auth.php';
 
 ---
 
-## UI Components
+## 🎨 UI Components
 
-### Dashboard Layout
+### 🧱 Dashboard Layout
 
 The main authenticated layout is located at:
 
@@ -433,7 +460,9 @@ This layout contains:
 * Main content wrapper
 * Alpine.js state for mobile sidebar
 
-### Sidebar Link Component
+---
+
+### 🧭 Sidebar Link Component
 
 Located at:
 
@@ -452,7 +481,9 @@ Example:
 </x-sidebar-link>
 ```
 
-### Modal Interaction
+---
+
+### 🪟 Modal Interaction
 
 Modal interactions use Alpine.js.
 
@@ -474,7 +505,7 @@ Example modal trigger:
 
 ---
 
-## Responsive Design Strategy
+## 📱 Responsive Design Strategy
 
 CareerLog uses Tailwind CSS breakpoints to support different devices.
 
@@ -494,7 +525,7 @@ Important responsive choices:
 
 ---
 
-## Alpine.js Setup
+## ⚡ Alpine.js Setup
 
 Make sure Alpine.js is active in:
 
@@ -523,7 +554,7 @@ Alpine.js is used for:
 
 ---
 
-## Styling Notes
+## 🖌️ Styling Notes
 
 CareerLog uses Tailwind CSS utility classes for styling.
 
@@ -540,19 +571,19 @@ Main UI style:
 Primary color usage:
 
 ```text
-Blue: primary actions and active menu
-Red: delete and logout actions
-Violet: screening status
-Emerald: offered or accepted status
-Amber: test stage
-Slate: text, border, and background
+Blue     : primary actions and active menu
+Red      : delete and logout actions
+Violet   : screening status
+Emerald  : offered or accepted status
+Amber    : test stage
+Slate    : text, border, and background
 ```
 
 ---
 
-## Manual Testing Checklist
+## ✅ Manual Testing Checklist
 
-### Authentication
+### 🔐 Authentication
 
 * User can access login page
 * User can login using seeded account
@@ -561,7 +592,7 @@ Slate: text, border, and background
 * Guest user cannot access protected pages
 * User can logout successfully
 
-### Companies
+### 🏢 Companies
 
 * Company list loads correctly
 * Add company modal opens
@@ -571,7 +602,7 @@ Slate: text, border, and background
 * Search input displays correctly
 * Layout works on desktop, tablet, and mobile
 
-### Applications
+### 📝 Applications
 
 * Application list loads correctly
 * Add application modal opens
@@ -582,7 +613,7 @@ Slate: text, border, and background
 * Status and work model filters display correctly
 * Layout works on desktop, tablet, and mobile
 
-### Responsive Layout
+### 📱 Responsive Layout
 
 * Mobile header appears on small screens
 * Hamburger menu opens mobile sidebar
@@ -593,7 +624,7 @@ Slate: text, border, and background
 
 ---
 
-## Troubleshooting
+## 🧯 Troubleshooting
 
 ### Vite Manifest Not Found
 
@@ -604,6 +635,8 @@ npm install
 npm run dev
 ```
 
+---
+
 ### Login Route Not Found
 
 Make sure Laravel Breeze is installed and this line exists in `routes/web.php`:
@@ -612,6 +645,8 @@ Make sure Laravel Breeze is installed and this line exists in `routes/web.php`:
 require __DIR__.'/auth.php';
 ```
 
+---
+
 ### Profile Route Error
 
 If the application does not use the Breeze profile page, remove links that call:
@@ -619,6 +654,8 @@ If the application does not use the Breeze profile page, remove links that call:
 ```blade
 route('profile.edit')
 ```
+
+---
 
 ### Applications Route Error
 
@@ -640,6 +677,8 @@ not:
 route('job-applications.index')
 ```
 
+---
+
 ### Modal Not Opening
 
 Check that Alpine.js is active and Vite is running:
@@ -647,6 +686,8 @@ Check that Alpine.js is active and Vite is running:
 ```bash
 npm run dev
 ```
+
+---
 
 ### Mobile Layout Has Horizontal Scroll
 
@@ -668,7 +709,7 @@ Also make sure wide tables are wrapped with:
 
 ---
 
-## Future Improvements
+## 🧭 Future Improvements
 
 Possible improvements for the next version:
 
@@ -687,7 +728,7 @@ Possible improvements for the next version:
 
 ---
 
-## Skills Demonstrated
+## 🧠 Skills Demonstrated
 
 This project demonstrates practical implementation of:
 
@@ -706,7 +747,7 @@ This project demonstrates practical implementation of:
 
 ---
 
-## Project Status
+## 📌 Project Status
 
 This project is currently in active development.
 
@@ -728,18 +769,20 @@ Next development focus:
 
 ---
 
-## Author
+## 👩‍💻 Author
 
 Developed by **Lala Lili** as a Laravel portfolio project.
 
 ---
 
-## License
+## 📄 License
 
 This project is created for learning and portfolio purposes.
 
 ---
 
-## About CareerLog
+## 💙 About CareerLog
 
-CareerLog is designed to make job application tracking more organized, focused, and easier to manage. It helps users keep track of companies, applications, statuses, interviews, and notes in one structured workspace.
+CareerLog is designed to make job application tracking more organized, focused, and easier to manage.
+
+It helps users keep track of companies, applications, statuses, interviews, and notes in one structured workspace.

@@ -771,7 +771,7 @@ Next development focus:
 
 ## 👩‍💻 Author
 
-Developed by **Lala Lili** as a Laravel portfolio project.
+Developed by **Arni Nazira** as a Laravel portfolio project.
 
 ---
 

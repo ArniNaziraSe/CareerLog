@@ -6,6 +6,12 @@ This application helps users manage companies, job applications, application sta
 
 ---
 
+## 🌐 Live Demo
+
+CareerLog is deployed on Render:
+
+https://careerlog.onrender.com
+
 ## ✨ Features
 
 - User registration and login

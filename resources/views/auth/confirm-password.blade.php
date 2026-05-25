@@ -1,4 +1,8 @@
-<x-guest-layout>
+<x-layouts.auth-careerlog
+    title="Forgot Password"
+    heading="Forgot password?"
+    description="Enter your email address and we will send you a password reset link."
+>
     <div class="mb-4 text-sm text-gray-600">
         {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
     </div>
@@ -24,4 +28,4 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+</x-layouts.auth-careerlog>

@@ -1,4 +1,5 @@
 <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    {{-- Total Applications --}}
     <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div class="flex items-start justify-between">
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -9,32 +10,15 @@
         </div>
 
         <p class="mt-5 text-3xl font-bold text-slate-950">
-            24
+            {{ $totalApplications }}
         </p>
 
         <p class="mt-1 text-sm text-slate-600">
-            +3 this week
+            All tracked applications
         </p>
     </div>
 
-    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div class="flex items-start justify-between">
-            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                Interviews
-            </p>
-
-            <x-heroicon-o-calendar-days class="h-6 w-6 text-violet-600" />
-        </div>
-
-        <p class="mt-5 text-3xl font-bold text-slate-950">
-            4
-        </p>
-
-        <p class="mt-1 text-sm text-slate-600">
-            2 upcoming
-        </p>
-    </div>
-
+    {{-- Accepted --}}
     <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div class="flex items-start justify-between">
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -45,14 +29,15 @@
         </div>
 
         <p class="mt-5 text-3xl font-bold text-slate-950">
-            1
+            {{ $acceptedApplications }}
         </p>
 
         <p class="mt-1 text-sm text-slate-600">
-            Congratulations!
+            Applications accepted
         </p>
     </div>
 
+    {{-- Rejected --}}
     <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div class="flex items-start justify-between">
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -63,11 +48,30 @@
         </div>
 
         <p class="mt-5 text-3xl font-bold text-slate-950">
-            8
+            {{ $rejectedApplications }}
         </p>
 
         <p class="mt-1 text-sm text-slate-600">
-            Keep pushing
+            Applications rejected
+        </p>
+    </div>
+
+    {{-- Ghosted --}}
+    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div class="flex items-start justify-between">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Ghosted
+            </p>
+
+            <x-heroicon-o-eye-slash class="h-6 w-6 text-slate-500" />
+        </div>
+
+        <p class="mt-5 text-3xl font-bold text-slate-950">
+            {{ $ghostedApplications }}
+        </p>
+
+        <p class="mt-1 text-sm text-slate-600">
+            No response yet
         </p>
     </div>
 </section>

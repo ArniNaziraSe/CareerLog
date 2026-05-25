@@ -1,7 +1,7 @@
 <div
     x-show="showEditModal"
     x-cloak
-    class="fixed inset-y-0 right-0 left-0 z-30 overflow-y-auto bg-slate-900/20 px-4 py-6 md:left-64"
+    class="fixed inset-y-0 right-0 left-0 z-30 overflow-y-auto bg-slate-900/20 px-4 py-6 lg:left-64"
 >
     <div class="flex min-h-full items-start justify-center">
         <div
@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <form action="#" method="POST">
+            <form method="POST" :action="`{{ url('/job-applications') }}/${selectedApplication.id}`">
                 @csrf
                 @method('PUT')
 
@@ -45,13 +45,17 @@
 
                             <select
                                 name="company_id"
-                                x-model="selectedApplication.company"
+                                x-model="selectedApplication.company_id"
+                                required
                                 class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
                                 <option value="">Select a company</option>
-                                <option value="Stripe">Stripe</option>
-                                <option value="Vercel">Vercel</option>
-                                <option value="Airbnb">Airbnb</option>
+
+                                @foreach ($companies as $company)
+                                    <option value="{{ $company->id }}">
+                                        {{ $company->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -77,7 +81,7 @@
                             <input
                                 type="date"
                                 name="applied_date"
-                                x-model="selectedApplication.appliedDate"
+                                x-model="selectedApplication.applied_date"
                                 class="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
                         </div>
@@ -92,13 +96,14 @@
                                 x-model="selectedApplication.status"
                                 class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
-                                <option value="Applied">Applied</option>
-                                <option value="Screening">Screening</option>
-                                <option value="Interview">Interview</option>
-                                <option value="Test">Test</option>
-                                <option value="Offered">Offered</option>
-                                <option value="Accepted">Accepted</option>
-                                <option value="Rejected">Rejected</option>
+                                <option value="applied">Applied</option>
+                                <option value="screening">Screening</option>
+                                <option value="interview">Interview</option>
+                                <option value="test">Test</option>
+                                <option value="offered">Offered</option>
+                                <option value="accepted">Accepted</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="ghosted">Ghosted</option>
                             </select>
                         </div>
 
@@ -137,16 +142,16 @@
 
                             <select
                                 name="work_model"
-                                x-model="selectedApplication.workModel"
+                                x-model="selectedApplication.work_model"
                                 class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
-                                <option value="Remote">Remote</option>
-                                <option value="Hybrid">Hybrid</option>
-                                <option value="On-site">On-site</option>
-                                <option value="Full Time">Full Time</option>
-                                <option value="Part Time">Part Time</option>
-                                <option value="Internship">Internship</option>
-                                <option value="Contract">Contract</option>
+                                <option value="remote">Remote</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="onsite">On-site</option>
+                                <option value="full_time">Full Time</option>
+                                <option value="part_time">Part Time</option>
+                                <option value="internship">Internship</option>
+                                <option value="contract">Contract</option>
                             </select>
                         </div>
 
@@ -158,38 +163,11 @@
                             <input
                                 type="date"
                                 name="interview_date"
-                                x-model="selectedApplication.nextInterview"
+                                x-model="selectedApplication.interview_date"
                                 class="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
                         </div>
 
-                        <div>
-                            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                                Role Category
-                            </label>
-
-                            <input
-                                type="text"
-                                name="role_category"
-                                x-model="selectedApplication.roleCategory"
-                                placeholder="e.g. Design & UX"
-                                class="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                            >
-                        </div>
-
-                        <div>
-                            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">
-                                Contact Person
-                            </label>
-
-                            <input
-                                type="text"
-                                name="contact_person"
-                                x-model="selectedApplication.contactPerson"
-                                placeholder="e.g. Jane Doe"
-                                class="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                            >
-                        </div>
                     </div>
 
                     <div>

@@ -4,8 +4,10 @@
             showCreateModal: false,
             showEditModal: false,
             showDetailModal: false,
+            openMenu: null,
 
             selectedCompany: {
+                id: '',
                 name: '',
                 website: '',
                 email: '',
@@ -16,11 +18,13 @@
             openDetail(company) {
                 this.selectedCompany = company;
                 this.showDetailModal = true;
+                this.openMenu = null;
             },
 
             openEdit(company) {
                 this.selectedCompany = company;
                 this.showEditModal = true;
+                this.openMenu = null;
             }
         }"
     >
@@ -38,15 +42,26 @@
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 {{-- Search Bar --}}
-                <div class="relative w-full sm:w-72">
+                <form method="GET" action="{{ route('companies.index') }}" class="relative w-full sm:w-72">
                     <x-heroicon-o-magnifying-glass class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 
                     <input
                         type="text"
+                        name="search"
+                        value="{{ request('search') }}"
                         placeholder="Search company..."
-                        class="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                        class="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-10 text-sm text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                     >
-                </div>
+
+                    @if (request('search'))
+                        <a
+                            href="{{ route('companies.index') }}"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                        >
+                            <x-heroicon-o-x-mark class="h-4 w-4" />
+                        </a>
+                    @endif
+                </form>
 
                 {{-- Add Company Button --}}
                 <button
@@ -60,9 +75,139 @@
             </div>
         </section>
 
+        @if (session('success'))
+            <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <p class="font-semibold">Something went wrong:</p>
+
+                <ul class="mt-2 list-inside list-disc">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        {{-- Mobile Cards --}}
+        <div class="space-y-3 lg:hidden">
+            @forelse ($companies as $company)
+                <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex min-w-0 items-center gap-3">
+                            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 font-bold text-blue-700">
+                                {{ strtoupper(substr($company->name, 0, 1)) }}
+                            </div>
+
+                            <div class="min-w-0">
+                                <p class="truncate font-bold text-slate-950">
+                                    {{ $company->name }}
+                                </p>
+
+                                <p class="truncate text-sm text-slate-500">
+                                    {{ $company->email ?? 'No email' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="relative shrink-0">
+                            <button
+                                type="button"
+                                @click="openMenu === {{ $company->id }} ? openMenu = null : openMenu = {{ $company->id }}"
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-100"
+                            >
+                                <x-heroicon-o-ellipsis-horizontal class="h-5 w-5" />
+                            </button>
+
+                            <div
+                                x-show="openMenu === {{ $company->id }}"
+                                x-cloak
+                                @click.away="openMenu = null"
+                                class="absolute right-0 top-12 z-50 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white text-left shadow-xl"
+                            >
+                                <button
+                                    type="button"
+                                    @click="openDetail({
+                                        id: '{{ $company->id }}',
+                                        name: @js($company->name),
+                                        website: @js($company->website ?? '-'),
+                                        email: @js($company->email ?? '-'),
+                                        address: @js($company->address ?? '-'),
+                                        notes: @js($company->notes ?? '-')
+                                    })"
+                                    class="flex w-full items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-100"
+                                >
+                                    <x-heroicon-o-eye class="h-4 w-4" />
+                                    Show Detail
+                                </button>
+
+                                <button
+                                    type="button"
+                                    @click="openEdit({
+                                        id: '{{ $company->id }}',
+                                        name: @js($company->name),
+                                        website: @js($company->website ?? ''),
+                                        email: @js($company->email ?? ''),
+                                        address: @js($company->address ?? ''),
+                                        notes: @js($company->notes ?? '')
+                                    })"
+                                    class="flex w-full items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-100"
+                                >
+                                    <x-heroicon-o-pencil-square class="h-4 w-4" />
+                                    Edit
+                                </button>
+
+                                <form
+                                    method="POST"
+                                    action="{{ route('companies.destroy', $company) }}"
+                                    onsubmit="return confirm('Are you sure you want to delete this company?')"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button
+                                        type="submit"
+                                        class="flex w-full items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50"
+                                    >
+                                        <x-heroicon-o-trash class="h-4 w-4" />
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 grid gap-3 text-sm">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Website</p>
+                            <p class="mt-1 text-slate-700">{{ $company->website ?? '-' }}</p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Address</p>
+                            <p class="mt-1 text-slate-700">{{ $company->address ?? '-' }}</p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Notes</p>
+                            <p class="mt-1 text-slate-700">{{ $company->notes ?? '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
+                    No companies found yet.
+                </div>
+            @endforelse
+        </div>
+
         {{-- Companies Table Card --}}
-        <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div class="overflow-x-auto">
+        <div class="hidden rounded-xl border border-slate-200 bg-white shadow-sm lg:block">
+            <div class="overflow-x-auto lg:overflow-visible">
                 <table class="w-full min-w-[820px] text-center text-sm">
                     <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500 text-center font-extrabold">
                         <tr>
@@ -76,218 +221,166 @@
                     </thead>
 
                     <tbody class="divide-y divide-slate-200">
-                        {{-- Row 1 --}}
-                        <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-5">
-                                <p class="font-bold text-slate-950">Acme Corp</p>
-                            </td>
+                        @forelse ($companies as $company)
+                            <tr class="hover:bg-slate-50">
+                                {{-- Company Name --}}
+                                <td class="px-6 py-5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 font-bold text-blue-700">
+                                            {{ strtoupper(substr($company->name, 0, 1)) }}
+                                        </div>
 
-                            <td class="px-6 py-5">
-                                <a href="#" class="font-medium text-blue-700 hover:text-blue-800">
-                                    acme.co
-                                </a>
-                            </td>
+                                        <div>
+                                            <p class="font-semibold text-slate-900">
+                                                {{ $company->name }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
 
-                            <td class="px-6 py-5 text-slate-600">
-                                careers@acme.co
-                            </td>
+                                {{-- Website --}}
+                                <td class="px-6 py-5 text-slate-700">
+                                    {{ $company->website ?? '-' }}
+                                </td>
 
-                            <td class="px-6 py-5 text-slate-600">
-                                123 Innovation Street
-                            </td>
+                                {{-- Email --}}
+                                <td class="px-6 py-5 text-slate-700">
+                                    {{ $company->email ?? '-' }}
+                                </td>
 
-                            <td class="px-6 py-5 text-slate-600">
-                                Great engineering culture
-                            </td>
+                                {{-- Address --}}
+                                <td class="px-6 py-5 text-slate-700">
+                                    {{ $company->address ?? '-' }}
+                                </td>
 
-                            <td class="px-6 py-5 text-right">
-                                <div class="flex justify-center gap-2">
+                                {{-- Notes --}}
+                                <td class="max-w-xs px-6 py-5 text-slate-700">
+                                    <p class="line-clamp-2">
+                                        {{ $company->notes ?? '-' }}
+                                    </p>
+                                </td>
+
+                                {{-- Action --}}
+                                <td class="relative overflow-visible px-6 py-5 text-right">
                                     <button
                                         type="button"
-                                        @click="openDetail({
-                                            name: 'Acme Corp',
-                                            website: 'acme.co',
-                                            email: 'careers@acme.co',
-                                            address: '123 Innovation Street',
-                                            notes: 'Great engineering culture',
-                                        })"
-                                        class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+                                        @click="openMenu === {{ $company->id }} ? openMenu = null : openMenu = {{ $company->id }}"
+                                        class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                                     >
-                                        View
+                                        <x-heroicon-o-ellipsis-horizontal class="h-5 w-5" />
                                     </button>
 
-                                    <button
-                                        type="button"
-                                        @click="openEdit({
-                                            name: 'Acme Corp',
-                                            website: 'acme.co',
-                                            email: 'careers@acme.co',
-                                            address: '123 Innovation Street',
-                                            notes: 'Great engineering culture',
-                                        })"
-                                        class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+                                    <div
+                                        x-show="openMenu === {{ $company->id }}"
+                                        x-cloak
+                                        @click.away="openMenu = null"
+                                        class="absolute right-0 top-12 z-50 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white text-left shadow-xl"
                                     >
-                                        Edit
-                                    </button>
+                                        <button
+                                            type="button"
+                                            @click="openDetail({
+                                                id: '{{ $company->id }}',
+                                                name: @js($company->name),
+                                                website: @js($company->website ?? '-'),
+                                                email: @js($company->email ?? '-'),
+                                                address: @js($company->address ?? '-'),
+                                                notes: @js($company->notes ?? '-')
+                                            })"
+                                            class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-100"
+                                        >
+                                            <x-heroicon-o-eye class="h-4 w-4" />
+                                            Show Detail
+                                        </button>
 
-                                    <button
-                                        type="button"
-                                        class="rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                        <button
+                                            type="button"
+                                            @click="openEdit({
+                                                id: '{{ $company->id }}',
+                                                name: @js($company->name),
+                                                website: @js($company->website ?? ''),
+                                                email: @js($company->email ?? ''),
+                                                address: @js($company->address ?? ''),
+                                                notes: @js($company->notes ?? '')
+                                            })"
+                                            class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-100"
+                                        >
+                                            <x-heroicon-o-pencil-square class="h-4 w-4" />
+                                            Edit
+                                        </button>
 
-                        {{-- Row 2 --}}
-                        <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-5">
-                                <p class="font-bold text-slate-950">Globex Inc</p>
-                            </td>
+                                        <form
+                                            method="POST"
+                                            action="{{ route('companies.destroy', $company) }}"
+                                            onsubmit="return confirm('Are you sure you want to delete this company?')"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
 
-                            <td class="px-6 py-5">
-                                <a href="#" class="font-medium text-blue-700 hover:text-blue-800">
-                                    globex.io
-                                </a>
-                            </td>
-
-                            <td class="px-6 py-5 text-slate-600">
-                                jobs@globex.io
-                            </td>
-
-                            <td class="px-6 py-5 text-slate-600">
-                                Remote
-                            </td>
-
-                            <td class="px-6 py-5 text-slate-600">
-                                Waiting on series B funding
-                            </td>
-
-                            <td class="px-6 py-5 text-right">
-                                <div class="flex justify-center gap-2">
-                                    <button
-                                        type="button"
-                                        @click="openDetail({
-                                            name: 'Globex Inc',
-                                            website: 'globex.io',
-                                            email: 'jobs@globex.io',
-                                            address: 'Remote',
-                                            notes: 'Waiting on series B funding',
-                                        })"
-                                        class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
-                                    >
-                                        View
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        @click="openEdit({
-                                            name: 'Globex Inc',
-                                            website: 'globex.io',
-                                            email: 'jobs@globex.io',
-                                            address: 'Remote',
-                                            notes: 'Waiting on series B funding',
-                                        })"
-                                        class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
-                                    >
-                                        Edit
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- Row 3 --}}
-                        <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-5">
-                                <p class="font-bold text-slate-950">Initech</p>
-                            </td>
-
-                            <td class="px-6 py-5">
-                                <a href="#" class="font-medium text-blue-700 hover:text-blue-800">
-                                    initech.com
-                                </a>
-                            </td>
-
-                            <td class="px-6 py-5 text-slate-600">
-                                hr@initech.com
-                            </td>
-
-                            <td class="px-6 py-5 text-slate-600">
-                                400 Corporate Drive
-                            </td>
-
-                            <td class="px-6 py-5 text-slate-600">
-                                Applied for Senior Programmer
-                            </td>
-
-                            <td class="px-6 py-5 text-right">
-                                <div class="flex justify-center gap-2">
-                                    <button
-                                        type="button"
-                                        @click="openDetail({
-                                            name: 'Initech',
-                                            website: 'initech.com',
-                                            email: 'hr@initech.com',
-                                            address: '400 Corporate Drive',
-                                            notes: 'Applied for Senior Programmer',
-                                        })"
-                                        class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
-                                    >
-                                        View
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        @click="openEdit({
-                                            name: 'Initech',
-                                            website: 'initech.com',
-                                            email: 'hr@initech.com',
-                                            address: '400 Corporate Drive',
-                                            notes: 'Applied for Senior Programmer',
-                                        })"
-                                        class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100"
-                                    >
-                                        Edit
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                            <button
+                                                type="submit"
+                                                class="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"
+                                            >
+                                                <x-heroicon-o-trash class="h-4 w-4" />
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-500">
+                                    No companies found yet.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
             {{-- Table Footer --}}
-            <div class="flex items-center justify-between border-t border-slate-200 px-6 py-4">
-                <p class="text-sm text-slate-600">
-                    Showing 1 to 3 of 21 applications
-                </p>
+            @if ($companies->hasPages())
+                <div class="flex flex-col gap-4 border-t border-slate-200 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <p class="text-sm text-slate-600">
+                        Showing {{ $companies->firstItem() }} to {{ $companies->lastItem() }} of {{ $companies->total() }} companies
+                    </p>
 
-                <div class="flex items-center gap-2">
-                    <button class="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-500 hover:bg-slate-100">
-                        Previous
-                    </button>
+                    <div class="flex items-center gap-2">
+                        @if ($companies->onFirstPage())
+                            <span class="cursor-not-allowed rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-400">
+                                Previous
+                            </span>
+                        @else
+                            <a
+                                href="{{ $companies->previousPageUrl() }}"
+                                class="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-600 hover:bg-slate-100"
+                            >
+                                Previous
+                            </a>
+                        @endif
 
-                    <button class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100">
-                        Next
-                    </button>
+                        @if ($companies->hasMorePages())
+                            <a
+                                href="{{ $companies->nextPageUrl() }}"
+                                class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100"
+                            >
+                                Next
+                            </a>
+                        @else
+                            <span class="cursor-not-allowed rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-400">
+                                Next
+                            </span>
+                        @endif
+                    </div>
                 </div>
+            @else
+                <div class="border-t border-slate-200 px-6 py-4">
+                    <p class="text-sm text-slate-600">
+                        Showing {{ $companies->count() }} companies
+                    </p>
+                </div>
+            @endif
             </div>
-        </section>
 
         @include('companies.create')
 

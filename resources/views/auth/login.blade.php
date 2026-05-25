@@ -105,7 +105,7 @@
                                     autofocus
                                     autocomplete="username"
                                     placeholder="you@example.com"
-                                    class="w-full rounded-lg border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                                    class="w-full rounded-xl border border-slate-200 bg-white py-3 pl-12 pr-4 text-base text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                                 >
                             </div>
 
@@ -117,23 +117,42 @@
                         </div>
 
                         {{-- Password --}}
-                        <div>
+                        <div x-data="{ showPassword: false }">
                             <label for="password" class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-700">
                                 Password
                             </label>
 
                             <div class="relative">
-                                <x-heroicon-o-lock-closed class="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                                <x-heroicon-o-lock-closed class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
 
                                 <input
                                     id="password"
-                                    type="password"
+                                    :type="showPassword ? 'text' : 'password'"
                                     name="password"
                                     required
                                     autocomplete="current-password"
                                     placeholder="Enter your password"
-                                    class="w-full rounded-lg border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                                    class="w-full rounded-xl border border-slate-200 bg-white py-3 pl-12 pr-12 text-base text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                                 >
+
+                                <button
+                                    type="button"
+                                    @click="showPassword = !showPassword"
+                                    class="absolute right-3 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                                    aria-label="Toggle password visibility"
+                                >
+                                    <x-heroicon-o-eye
+                                        x-show="!showPassword"
+                                        x-cloak
+                                        class="h-5 w-5"
+                                    />
+
+                                    <x-heroicon-o-eye-slash
+                                        x-show="showPassword"
+                                        x-cloak
+                                        class="h-5 w-5"
+                                    />
+                                </button>
                             </div>
 
                             @error('password')
@@ -166,6 +185,16 @@
                             Login
                         </button>
                     </form>
+
+                    <p class="mt-6 text-center text-sm text-slate-600">
+                        Don’t have an account?
+
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="font-semibold text-blue-700 hover:text-blue-800">
+                                Create account
+                            </a>
+                        @endif
+                    </p>
 
                     <p class="mt-6 text-center text-sm text-slate-600">
                         CareerLog job application tracker

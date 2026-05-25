@@ -1,7 +1,7 @@
 <div
     x-show="showCreateModal"
     x-cloak
-    class="fixed inset-y-0 right-0 left-0 z-30 overflow-y-auto bg-slate-900/20 px-4 py-6 md:left-64"
+    class="fixed inset-y-0 right-0 left-0 z-30 overflow-y-auto bg-slate-900/20 px-4 py-6 lg:left-64"
 >
     <div class="flex min-h-full items-start justify-center">
         <div
@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <form action="#" method="POST">
+            <form action="{{ route('job-applications.store') }}" method="POST">
                 @csrf
 
                 {{-- Form Body --}}
@@ -44,12 +44,16 @@
 
                             <select
                                 name="company_id"
+                                required
                                 class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
-                                <option>Select a company</option>
-                                <option>Stripe</option>
-                                <option>Vercel</option>
-                                <option>Airbnb</option>
+                                <option value="">Select a company</option>
+
+                                @foreach ($companies as $company)
+                                    <option value="{{ $company->id }}" @selected(old('company_id') == $company->id)>
+                                        {{ $company->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -87,13 +91,14 @@
                                 name="status"
                                 class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
-                                <option>Applied</option>
-                                <option>Screening</option>
-                                <option>Interview</option>
-                                <option>Test</option>
-                                <option>Offered</option>
-                                <option>Accepted</option>
-                                <option>Rejected</option>
+                                <option value="applied">Applied</option>
+                                <option value="screening">Screening</option>
+                                <option value="interview">Interview</option>
+                                <option value="test">Test</option>
+                                <option value="offered">Offered</option>
+                                <option value="accepted">Accepted</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="ghosted">Ghosted</option>
                             </select>
                         </div>
 
@@ -116,9 +121,10 @@
                             </label>
 
                             <input
-                                type="text"
+                                type="number"
                                 name="salary"
-                                placeholder="e.g. 12m - 14m"
+                                value="{{ old('salary') }}"
+                                placeholder="e.g. 5000000"
                                 class="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
                         </div>
@@ -132,13 +138,13 @@
                                 name="work_model"
                                 class="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
                             >
-                                <option>Remote</option>
-                                <option>Hybrid</option>
-                                <option>On-site</option>
-                                <option>Full Time</option>
-                                <option>Part Time</option>
-                                <option>Internship</option>
-                                <option>Contract</option>
+                                <option value="remote">Remote</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="onsite">On-site</option>
+                                <option value="full_time">Full Time</option>
+                                <option value="part_time">Part Time</option>
+                                <option value="internship">Internship</option>
+                                <option value="contract">Contract</option>
                             </select>
                         </div>
 

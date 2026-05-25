@@ -32,7 +32,7 @@
             </div>
 
             {{-- Modal Body --}}
-            <form action="#" method="POST">
+            <form action="{{ route('companies.store') }}" method="POST">
                 @csrf
 
                 <div class="max-h-[65vh] space-y-4 overflow-y-auto px-5 py-5">

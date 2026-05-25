@@ -16,7 +16,19 @@ class JobApplicationController extends Controller
     public function index(Request $request)
     {
         $query = JobApplication::with('company')
-            ->where('user_id', Auth::id());
+            ->where('user_id', auth()->id());
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+
+            $query->where(function ($q) use ($search) {
+                $q->where('position', 'ilike', '%' . $search . '%')
+                    ->orWhere('source', 'ilike', '%' . $search . '%')
+                    ->orWhereHas('company', function ($companyQuery) use ($search) {
+                        $companyQuery->where('name', 'ilike', '%' . $search . '%');
+                    });
+            });
+        }
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -26,18 +38,13 @@ class JobApplicationController extends Controller
             $query->where('work_model', $request->work_model);
         }
 
-        if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('position', 'ilike', '%' . $request->search . '%')
-                    ->orWhereHas('company', function ($companyQuery) use ($request) {
-                        $companyQuery->where('name', 'ilike', '%' . $request->search . '%');
-                    });
-            });
-        }
+        $applications = $query->latest()->paginate(10)->withQueryString();
 
-        $applications = $query->latest()->paginate(10);
+        $companies = Company::where('user_id', auth()->id())
+            ->orderBy('name')
+            ->get();
 
-        return view('job-applications.index', compact('applications'));
+        return view('job-applications.index', compact('applications', 'companies'));
     }
 
     /**
@@ -58,23 +65,24 @@ class JobApplicationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'company_id' => 'required|exists:companies,id',
-            'position' => 'required|string|max:255',
-            'applied_date' => 'required|date',
-            'status' => 'required|string|max:50',
-            'source' => 'nullable|string|max:255',
-            'salary' => 'nullable|integer|min:0',
-            'work_model' => 'required|string|max:50',
-            'interview_date' => 'nullable|date',
-            'notes' => 'nullable|string',
+            'company_id' => ['required', 'exists:companies,id'],
+            'position' => ['required', 'string', 'max:255'],
+            'applied_date' => ['required', 'date'],
+            'status' => ['required', 'in:applied,screening,interview,test,offered,accepted,rejected,ghosted'],
+            'source' => ['nullable', 'string', 'max:255'],
+            'salary' => ['nullable', 'integer'],
+            'work_model' => ['required', 'in:remote,hybrid,onsite,full_time,part_time,internship,contract'],
+            'interview_date' => ['nullable', 'date'],
+            'notes' => ['nullable', 'string'],
         ]);
 
-        $company = Company::where('id', $validated['company_id'])
+        $companyBelongsToUser = Company::where('id', $validated['company_id'])
             ->where('user_id', Auth::id())
-            ->firstOrFail();
+            ->exists();
 
-        $validated['user_id'] = Auth::id();
-        $validated['company_id'] = $company->id;
+        abort_if(! $companyBelongsToUser, 403);
+
+        $validated['user_id'] = auth()->id();
 
         JobApplication::create($validated);
 
@@ -114,25 +122,25 @@ class JobApplicationController extends Controller
      */
     public function update(Request $request, JobApplication $application)
     {
-        $this->authorizeApplication($application);
+        abort_if($application->user_id !== Auth::id(), 403);
 
         $validated = $request->validate([
-            'company_id' => 'required|exists:companies,id',
-            'position' => 'required|string|max:255',
-            'applied_date' => 'required|date',
-            'status' => 'required|string|max:50',
-            'source' => 'nullable|string|max:255',
-            'salary' => 'nullable|integer|min:0',
-            'work_model' => 'required|string|max:50',
-            'interview_date' => 'nullable|date',
-            'notes' => 'nullable|string',
+            'company_id' => ['required', 'exists:companies,id'],
+            'position' => ['required', 'string', 'max:255'],
+            'applied_date' => ['required', 'date'],
+            'status' => ['required', 'in:applied,screening,interview,test,offered,accepted,rejected,ghosted'],
+            'source' => ['nullable', 'string', 'max:255'],
+            'salary' => ['nullable', 'integer'],
+            'work_model' => ['required', 'in:remote,hybrid,onsite,full_time,part_time,internship,contract'],
+            'interview_date' => ['nullable', 'date'],
+            'notes' => ['nullable', 'string'],
         ]);
 
-        $company = Company::where('id', $validated['company_id'])
+        $companyBelongsToUser = Company::where('id', $validated['company_id'])
             ->where('user_id', Auth::id())
-            ->firstOrFail();
+            ->exists();
 
-        $validated['company_id'] = $company->id;
+        abort_if(! $companyBelongsToUser, 403);
 
         $application->update($validated);
 
@@ -146,7 +154,7 @@ class JobApplicationController extends Controller
      */
     public function destroy(JobApplication $application)
     {
-        $this->authorizeApplication($application);
+        abort_if((int) $application->user_id !== (int) auth()->id(), 403);
 
         $application->delete();
 

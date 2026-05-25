@@ -1,4 +1,8 @@
-<x-guest-layout>
+<x-layouts.auth-careerlog
+    title="Forgot Password"
+    heading="Forgot password?"
+    description="Enter your email address and we will send you a password reset link."
+>
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
@@ -36,4 +40,4 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+</x-layouts.auth-careerlog>

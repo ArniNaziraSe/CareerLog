@@ -9,196 +9,108 @@
         </a>
     </div>
 
-    {{-- Mobile Cards --}}
+    {{-- Mobile and Tablet Cards --}}
     <div class="space-y-3 lg:hidden">
-        {{-- Card 1 --}}
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div class="flex items-start justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 font-bold text-blue-700">
-                        A
+        @forelse ($recentApplications as $application)
+            @php
+                $statusStyles = [
+                    'applied' => 'bg-slate-100 text-slate-700',
+                    'screening' => 'bg-violet-100 text-violet-700',
+                    'interview' => 'bg-blue-600 text-white',
+                    'test' => 'bg-amber-100 text-amber-700',
+                    'offered' => 'bg-emerald-100 text-emerald-700',
+                    'accepted' => 'bg-emerald-600 text-white',
+                    'rejected' => 'bg-red-100 text-red-700',
+                    'ghosted' => 'bg-slate-200 text-slate-700',
+                ];
+
+                $statusClass = $statusStyles[$application->status] ?? 'bg-slate-100 text-slate-700';
+
+                $companyName = $application->company->name ?? 'Unknown Company';
+
+                $companyInitial = strtoupper(substr($companyName, 0, 1));
+
+                $statusLabel = ucfirst($application->status);
+
+                $workModelLabel = str_replace('_', ' ', $application->work_model);
+            @endphp
+
+            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 font-bold text-blue-700">
+                            {{ $companyInitial }}
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-slate-950">
+                                {{ $companyName }}
+                            </p>
+
+                            <p class="text-xs text-slate-500">
+                                {{ $application->source ?? 'No source' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $statusClass }}">
+                        {{ $statusLabel }}
+                    </span>
+                </div>
+
+                <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            Position
+                        </p>
+
+                        <p class="mt-1 font-medium text-slate-800">
+                            {{ $application->position }}
+                        </p>
                     </div>
 
                     <div>
-                        <p class="font-bold text-slate-950">
-                            Acme Corp
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            Model
                         </p>
 
-                        <p class="text-xs text-slate-500">
-                            Technology
+                        <p class="mt-1 font-medium capitalize text-slate-800">
+                            {{ $workModelLabel }}
                         </p>
-                    </div>
-                </div>
-
-                <span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">
-                    Screening
-                </span>
-            </div>
-
-            <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Position
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        Senior Product Designer
-                    </p>
-                </div>
-
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Model
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        Remote
-                    </p>
-                </div>
-
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Date
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        Oct 24, 2023
-                    </p>
-                </div>
-
-                <div class="flex items-end justify-end">
-                    <a href="{{ route('job-applications.index') }}" class="font-semibold text-blue-700 hover:text-blue-800">
-                        View
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Card 2 --}}
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div class="flex items-start justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 font-bold text-blue-700">
-                        G
                     </div>
 
                     <div>
-                        <p class="font-bold text-slate-950">
-                            Global Tech
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            Date
                         </p>
 
-                        <p class="text-xs text-slate-500">
-                            Software
-                        </p>
-                    </div>
-                </div>
-
-                <span class="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
-                    Interview
-                </span>
-            </div>
-
-            <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Position
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        UX Researcher
-                    </p>
-                </div>
-
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Model
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        Hybrid
-                    </p>
-                </div>
-
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Date
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        Oct 20, 2023
-                    </p>
-                </div>
-
-                <div class="flex items-end justify-end">
-                    <a href="{{ route('job-applications.index') }}" class="font-semibold text-blue-700 hover:text-blue-800">
-                        View
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Card 3 --}}
-        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div class="flex items-start justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 font-bold text-blue-700">
-                        Z
-                    </div>
-
-                    <div>
-                        <p class="font-bold text-slate-950">
-                            Zenith Inc
-                        </p>
-
-                        <p class="text-xs text-slate-500">
-                            Design Studio
+                        <p class="mt-1 font-medium text-slate-800">
+                            {{ \Carbon\Carbon::parse($application->applied_date)->format('M d, Y') }}
                         </p>
                     </div>
-                </div>
 
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                    Applied
-                </span>
-            </div>
-
-            <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Position
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        UI Designer
-                    </p>
-                </div>
-
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Model
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        On-site
-                    </p>
-                </div>
-
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Date
-                    </p>
-
-                    <p class="mt-1 font-medium text-slate-800">
-                        Oct 18, 2023
-                    </p>
-                </div>
-
-                <div class="flex items-end justify-end">
-                    <a href="{{ route('job-applications.index') }}" class="font-semibold text-blue-700 hover:text-blue-800">
-                        View
-                    </a>
+                    <div class="flex items-end justify-end">
+                        <a href="{{ route('job-applications.index') }}" class="font-semibold text-blue-700 hover:text-blue-800">
+                            View
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        @empty
+            <div class="rounded-xl border border-dashed border-slate-300 bg-white p-6 text-center">
+                <p class="font-semibold text-slate-800">
+                    No applications yet
+                </p>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Add your first job application to see it here.
+                </p>
+
+                <a href="{{ route('job-applications.index') }}" class="mt-4 inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">
+                    Add Application
+                </a>
+            </div>
+        @endforelse
     </div>
 
     {{-- Desktop Table --}}
@@ -217,128 +129,82 @@
                 </thead>
 
                 <tbody class="divide-y divide-slate-200">
-                    <tr class="hover:bg-slate-50">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="flex h-9 w-9 items-center justify-center rounded bg-blue-50 font-bold text-blue-700">
-                                    A
+                    @forelse ($recentApplications as $application)
+                        @php
+                            $statusStyles = [
+                                'applied' => 'bg-slate-100 text-slate-700',
+                                'screening' => 'bg-violet-100 text-violet-700',
+                                'interview' => 'bg-blue-600 text-white',
+                                'test' => 'bg-amber-100 text-amber-700',
+                                'offered' => 'bg-emerald-100 text-emerald-700',
+                                'accepted' => 'bg-emerald-600 text-white',
+                                'rejected' => 'bg-red-100 text-red-700',
+                                'ghosted' => 'bg-slate-200 text-slate-700',
+                            ];
+
+                            $statusClass = $statusStyles[$application->status] ?? 'bg-slate-100 text-slate-700';
+
+                            $companyName = $application->company->name ?? 'Unknown Company';
+
+                            $companyInitial = strtoupper(substr($companyName, 0, 1));
+
+                            $statusLabel = ucfirst($application->status);
+
+                            $workModelLabel = str_replace('_', ' ', $application->work_model);
+                        @endphp
+
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-5">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex h-9 w-9 items-center justify-center rounded bg-blue-50 font-bold text-blue-700">
+                                        {{ $companyInitial }}
+                                    </div>
+
+                                    <div>
+                                        <p class="font-semibold text-slate-900">
+                                            {{ $companyName }}
+                                        </p>
+
+                                        <p class="text-xs text-slate-500">
+                                            {{ $application->source ?? 'No source' }}
+                                        </p>
+                                    </div>
                                 </div>
+                            </td>
 
-                                <div>
-                                    <p class="font-semibold text-slate-900">Acme Corp</p>
-                                    <p class="text-xs text-slate-500">Technology</p>
-                                </div>
-                            </div>
-                        </td>
+                            <td class="px-6 py-5 text-slate-700">
+                                {{ $application->position }}
+                            </td>
 
-                        <td class="px-6 py-5 text-slate-700">
-                            Senior Product Designer
-                        </td>
+                            <td class="px-6 py-5">
+                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $statusClass }}">
+                                    {{ $statusLabel }}
+                                </span>
+                            </td>
 
-                        <td class="px-6 py-5">
-                            <span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">
-                                Screening
-                            </span>
-                        </td>
+                            <td class="px-6 py-5">
+                                <span class="rounded-md border border-slate-200 px-3 py-1 text-xs capitalize text-slate-700">
+                                    {{ $workModelLabel }}
+                                </span>
+                            </td>
 
-                        <td class="px-6 py-5">
-                            <span class="rounded-md border border-slate-200 px-3 py-1 text-xs text-slate-700">
-                                Remote
-                            </span>
-                        </td>
+                            <td class="px-6 py-5 text-slate-600">
+                                {{ \Carbon\Carbon::parse($application->applied_date)->format('M d, Y') }}
+                            </td>
 
-                        <td class="px-6 py-5 text-slate-600">
-                            Oct 24, 2023
-                        </td>
-
-                        <td class="px-6 py-5 text-right">
-                            <a href="{{ route('job-applications.index') }}" class="font-medium text-blue-700 hover:text-blue-800">
-                                View
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="flex h-9 w-9 items-center justify-center rounded bg-blue-50 font-bold text-blue-700">
-                                    G
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-slate-900">Global Tech</p>
-                                    <p class="text-xs text-slate-500">Software</p>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td class="px-6 py-5 text-slate-700">
-                            UX Researcher
-                        </td>
-
-                        <td class="px-6 py-5">
-                            <span class="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
-                                Interview
-                            </span>
-                        </td>
-
-                        <td class="px-6 py-5">
-                            <span class="rounded-md border border-slate-200 px-3 py-1 text-xs text-slate-700">
-                                Hybrid
-                            </span>
-                        </td>
-
-                        <td class="px-6 py-5 text-slate-600">
-                            Oct 20, 2023
-                        </td>
-
-                        <td class="px-6 py-5 text-right">
-                            <a href="{{ route('job-applications.index') }}" class="font-medium text-blue-700 hover:text-blue-800">
-                                View
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr class="hover:bg-slate-50">
-                        <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="flex h-9 w-9 items-center justify-center rounded bg-blue-50 font-bold text-blue-700">
-                                    Z
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-slate-900">Zenith Inc</p>
-                                    <p class="text-xs text-slate-500">Design Studio</p>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td class="px-6 py-5 text-slate-700">
-                            UI Designer
-                        </td>
-
-                        <td class="px-6 py-5">
-                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                                Applied
-                            </span>
-                        </td>
-
-                        <td class="px-6 py-5">
-                            <span class="rounded-md border border-slate-200 px-3 py-1 text-xs text-slate-700">
-                                On-site
-                            </span>
-                        </td>
-
-                        <td class="px-6 py-5 text-slate-600">
-                            Oct 18, 2023
-                        </td>
-
-                        <td class="px-6 py-5 text-right">
-                            <a href="{{ route('job-applications.index') }}" class="font-medium text-blue-700 hover:text-blue-800">
-                                View
-                            </a>
-                        </td>
-                    </tr>
+                            <td class="px-6 py-5 text-right">
+                                <a href="{{ route('job-applications.index') }}" class="font-medium text-blue-700 hover:text-blue-800">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-500">
+                                No applications found yet.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

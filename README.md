@@ -410,10 +410,10 @@ http://127.0.0.1:8000
 | POST      | `/companies`                  | companies.store      | Store company      |
 | PUT/PATCH | `/companies/{company}`        | companies.update     | Update company     |
 | DELETE    | `/companies/{company}`        | companies.destroy    | Delete company     |
-| GET       | `/applications`               | applications.index   | Application list   |
-| POST      | `/applications`               | applications.store   | Store application  |
-| PUT/PATCH | `/applications/{application}` | applications.update  | Update application |
-| DELETE    | `/applications/{application}` | applications.destroy | Delete application |
+| GET       | `/applications`               | job-applications.index   | Application list   |
+| POST      | `/applications`               | job-applications.store   | Store application  |
+| PUT/PATCH | `/applications/{application}` | job-applications.update  | Update application |
+| DELETE    | `/applications/{application}` | job-applications.destroy | Delete application |
 
 ---
 
@@ -668,7 +668,7 @@ Route::resource('applications', JobApplicationController::class);
 then use:
 
 ```blade
-route('applications.index')
+route('job-applications.index')
 ```
 
 not:

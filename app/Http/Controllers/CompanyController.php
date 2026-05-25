@@ -11,9 +11,26 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $companies = Company::where('user_id', Auth::id())->latest()->paginate(10);
+        $query = Company::where('user_id', auth()->id());
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', '%' . $search . '%')
+                    ->orWhere('website', 'ilike', '%' . $search . '%')
+                    ->orWhere('email', 'ilike', '%' . $search . '%')
+                    ->orWhere('address', 'ilike', '%' . $search . '%')
+                    ->orWhere('notes', 'ilike', '%' . $search . '%');
+            });
+        }
+
+        $companies = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('companies.index', compact('companies'));
     }

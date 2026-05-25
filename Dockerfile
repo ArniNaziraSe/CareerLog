@@ -19,9 +19,21 @@ WORKDIR /var/www/html
 
 COPY . .
 
+RUN rm -rf public/build
+RUN rm -f public/hot
+RUN rm -rf bootstrap/cache/*.php
+RUN rm -rf storage/framework/views/*
+RUN rm -rf storage/framework/cache/data/*
+
 RUN composer install --no-dev --optimize-autoloader
 
-RUN npm install && npm run build
+RUN npm install
+RUN npm run build
+
+RUN php artisan optimize:clear
+RUN php artisan config:clear
+RUN php artisan route:clear
+RUN php artisan view:clear
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 

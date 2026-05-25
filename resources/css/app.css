@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "tailwindcss";
-
-@source "../views/**/*.blade.php";
-@source "../js/**/*.js";
-
 html,
 body {
     width: 100%;

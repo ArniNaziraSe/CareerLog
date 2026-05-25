@@ -30,10 +30,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install
 RUN npm run build
 
-RUN php artisan optimize:clear
-RUN php artisan config:clear
-RUN php artisan route:clear
-RUN php artisan view:clear
+RUN test -f public/build/manifest.json
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
